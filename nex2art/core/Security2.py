@@ -208,7 +208,12 @@ class Security2(object):
             if xmlproperties == None: xmlproperties = []
             else: xmlproperties = xmlproperties.findall('property')
             for propxml in xmlproperties:
-                privtmp[propxml.find('key').text] = propxml.find('value').text
+                value_property = propxml.find('value')
+                if value_property is not None:
+				    privtmp[propxml.find('key').text] = value_property.text
+                else:
+                    self.log.error('No subelement value found, skipping')
+                    continue
             name, method = privxml.find('name').text, privtmp['method']
             self.log.debug("Extracting privilege %s", name)
             mthdstrs = method.split(',')
